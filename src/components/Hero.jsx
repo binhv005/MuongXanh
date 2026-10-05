@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { tourData } from '../data/tourData';
 import ScrollReveal from './common/ScrollReveal';
 
 export default function Hero() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Hero video autoplay error:', err);
+        });
+      }
+    }
+  }, []);
+
   return (
     <section id="hero" className="relative w-full h-[100svh] min-h-[520px] md:h-auto md:min-h-0 md:aspect-[16/9] flex items-center justify-center overflow-hidden bg-forest-950 pt-16 md:pt-0">
       {/* Background Video with edge-to-edge full-bleed coverage on mobile and exact 16:9 on desktop */}
       <div className="absolute inset-0 z-0 overflow-hidden flex items-center justify-center pointer-events-none">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
@@ -16,10 +32,8 @@ export default function Hero() {
           preload="auto"
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[max(100vh,56.25vw)] h-[max(100vw,177.78vh)] min-w-[max(100vh,56.25vw)] min-h-[max(100vw,177.78vh)] max-w-none max-h-none -rotate-90 object-cover filter contrast-[1.05] saturate-[1.08] brightness-[1.02] transform-gpu will-change-transform"
         >
-          <source
-            src="/videos/From Klickpin.com- 42 Trendy Mindfulness Ideas-pin-id-594615957088473309.mp4"
-            type="video/mp4"
-          />
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+          <source src="/videos/From%20Klickpin.com-%2042%20Trendy%20Mindfulness%20Ideas-pin-id-594615957088473309.mp4" type="video/mp4" />
         </video>
         {/* Ambient overlay for high text contrast */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/40" />
